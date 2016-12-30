@@ -13,6 +13,7 @@ float dx = 0; //Velocidad (lo que se le suma a x por frame)
 float dy = 0;
 
 bool onGround = false;
+bool didEndJump = false;
 
 void setup() {
   arduboy.boot();
@@ -24,15 +25,15 @@ void setup() {
 
 void startJump(){
   if(onGround){
-    dy = -3;
+    dy = -4;
     onGround = false;
     y = YTAM - RADIO -2;
   }
 }
 
 void endJump(){
-  if(dy < -0.2){
-    dy = -0.2;
+  if(dy < -0.1){
+    dy -= -0.3;
   }
 }
 
