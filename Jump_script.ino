@@ -5,7 +5,7 @@ Arduboy2 arduboy;
 const int XTAM = 128; //El tamaño de la pantalla
 const int YTAM = 64;
 const int RADIO = 7;
-const float GRAV = 0.2;
+const float GRAV = 0.1;
 
 float x = XTAM/2 - RADIO/2;
 float y = YTAM/2 - RADIO/2;
@@ -13,6 +13,7 @@ float dx = 0; //Velocidad (lo que se le suma a x por frame)
 float dy = 0;
 
 bool onGround = false;
+bool onTop = false;
 bool didEndJump = false;
 
 void setup() {
@@ -25,7 +26,7 @@ void setup() {
 
 void startJump(){
   if(onGround){
-    dy = -4;
+    dy = -3.14; //El primer impulso, el mejor es 3.14 para que no toque el techo
     onGround = false;
     y = YTAM - RADIO -2;
   }
@@ -33,7 +34,7 @@ void startJump(){
 
 void endJump(){
   if(dy < -0.1){
-    dy -= -0.3;
+    dy -= -0.1;
   }
 }
 
@@ -41,11 +42,16 @@ void update(){
   dy += GRAV;
   x += dx;
   y += dy;
+  onTop = false;
 
   if(y > YTAM - RADIO -2){
     onGround = true;
     dy = 0.0;
     y = YTAM - RADIO -2;
+  }
+  if(y < RADIO){
+    y = RADIO;
+    onTop = true;
   }
 }
 
@@ -65,14 +71,7 @@ void loop() {
   if(!arduboy.pressed(UP_BUTTON)){
     endJump();
   }
-
-  arduboy.setCursor(0, 0);
-  arduboy.print(dy);
-  arduboy.setCursor(0, 9);
-  arduboy.print(y);
-  arduboy.setCursor(0, 18);
-  arduboy.print(onGround);
-
+  
   arduboy.drawCircle(x, y, RADIO, WHITE);
   
   //delay(35);
