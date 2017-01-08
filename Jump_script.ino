@@ -14,7 +14,6 @@ float dy = 0;
 
 bool onGround = false;
 bool onTop = false;
-bool didEndJump = false;
 
 void setup() {
   arduboy.boot();
@@ -60,21 +59,28 @@ void loop() {
     return;
   
   arduboy.clear();
-
+  
   arduboy.drawFastHLine(0, 63, 128, WHITE);
-
+  
   update();
-
+  
   if(arduboy.pressed(UP_BUTTON)){
     startJump();
+    
   }
   if(!arduboy.pressed(UP_BUTTON)){
     endJump();
   }
   
   arduboy.drawCircle(x, y, RADIO, WHITE);
-  
-  //delay(35);
-  
+
+  if(dy > 0){
+    arduboy.setCursor(0, 0);
+    arduboy.print("Falling");
+  }else if(dy < 0 && !onGround){
+    arduboy.setCursor(0, 0);
+    arduboy.print("Jumping");
+  }
+    
   arduboy.display();
 }
